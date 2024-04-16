@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
+use anchor_lang::solana_program::sysvar::Sysvar;
+use anchor_spl::token::{self, TokenAccount, Transfer};
 
-// Your program Id will be added here when you enter "build" command
 declare_id!("4QNvhRvenGyUqfz1EdgUtPkPo5LSQ62KAKxZWV9caQBE");
 
 #[program]
@@ -25,7 +26,7 @@ pub mod safe_shipping {
         project_account.client_name = client_account.client_name.clone();
         project_account.description = description;
         project_account.budget = budget;
-        project_account.state = ProjectState::Open as u8; // Convert enum to u8
+        project_account.state = ProjectState::Open as u8; 
 
         Ok(())
     }
@@ -33,7 +34,7 @@ pub mod safe_shipping {
     // Function to close a project
     pub fn close_project(ctx: Context<CloseProject>) -> Result<()> {
         let project_account = &mut ctx.accounts.project_account;
-        project_account.state = ProjectState::Closed as u8; // Convert enum to u8
+        project_account.state = ProjectState::Closed as u8;
         Ok(())
     }
 
@@ -43,7 +44,7 @@ pub mod safe_shipping {
         freelancer_name: String,
     ) -> Result<()> {
         let freelancer_account = &mut ctx.accounts.freelancer_account;
-        freelancer_account.freelancer_name = freelancer_name.clone(); // Use the function parameter
+        freelancer_account.freelancer_name = freelancer_name.clone(); 
 
         Ok(())
     }
@@ -70,7 +71,7 @@ pub fn assign_project(ctx: Context<AssignProject>, freelancer_pub_key: Pubkey, a
     }
 
     // Initialize the assigned_freelancer field before assignment
-    project_account.freelancer_name = String::default(); // Set a default value (e.g., empty String)
+    project_account.freelancer_name = String::default(); 
 
     // Access the freelancer's public key from the context
     project_account.freelancer_name = freelancer_pub_key.to_string();
@@ -85,10 +86,10 @@ pub fn assign_project(ctx: Context<AssignProject>, freelancer_pub_key: Pubkey, a
 }
 
     // Function to mark project as completed (requires client signature)
-    pub fn complete_project(ctx: Context<CompleteProject>) -> Result<()> {
+    pub fn complete_project(ctx: Context<CompleteProject>, amount: u64) -> Result<()> {
         let project_account = &mut ctx.accounts.project_account;
         let client_account = &mut ctx.accounts.client_account;
-
+        let freelancer_account = &mut ctx.accounts.freelancer_account;
         // Ensure project is in progress and client signs
         if project_account.state != ProjectState::InProgress as u8
             || !client_account.key().eq(&ctx.accounts.authority.key())
@@ -96,15 +97,25 @@ pub fn assign_project(ctx: Context<AssignProject>, freelancer_pub_key: Pubkey, a
             return Err(ProgramError::InvalidInstructionData.into());
         }
 
-        project_account.state = ProjectState::Closed as u8;
+        // Transfer tokens from client to freelancer
+        token::transfer(
+    CpiContext::new(
+        ctx.accounts.token_program.clone(),
+        Transfer {
+            from: ctx.accounts.client_wallet.to_account_info(),
+            to: ctx.accounts.freelancer_wallet.to_account_info(),
+            authority: ctx.accounts.authority.to_account_info(),
+        },
+    ),
+    amount,
+)?;
 
-        // Simplistic payment example (replace with actual token transfer)
-        // msg!("Simulating token transfer to freelancer...");
-        // ... (implement token transfer logic using another program)
+        project_account.state = ProjectState::Closed as u8;
 
         Ok(())
     }
 }
+
 
 #[derive(Accounts)]
 pub struct CreateProject<'info> {
@@ -114,7 +125,7 @@ pub struct CreateProject<'info> {
     #[account(
         init,
         payer = authority,
-        space = 8 + 32 + 256 + 8 + 4, // Adjust space for your needs
+        space = 8 + 32 + 256 + 8 + 4, 
         seeds = [b"project", authority.key().as_ref()], 
         bump
     )]
@@ -137,6 +148,7 @@ pub struct CloseProject<'info> {
     pub system_program: Program<'info, System>,
 }
 
+
 #[derive(Accounts)]
 pub struct CompleteProject<'info> {
     #[account(mut)]
@@ -148,7 +160,19 @@ pub struct CompleteProject<'info> {
     #[account(mut)]
     pub client_account: Account<'info, ClientAccount>,
 
-    pub system_program: Program<'info, System>,
+    #[account(mut)]
+    pub freelancer_account: Account<'info, FreelancerAccount>, // Freelancer
+
+    #[account(mut)] // Token account of the client
+    pub client_wallet: Account<'info, TokenAccount>,
+
+    #[account(mut)] // Token account of the freelancer
+    pub freelancer_wallet: Account<'info, TokenAccount>,
+
+    #[account(address = token::ID)] // The token program ID
+    pub token_program: AccountInfo<'info>,
+
+    pub system_program: Program<'info, System>
 }
 
 #[derive(Accounts)]
@@ -176,7 +200,7 @@ pub struct RegisterFreelancer<'info> {
     #[account(
         init,
         payer = authority,
-        space = 8 + 32, // Adjust space for your needs
+        space = 8 + 32, 
         seeds = [b"user", authority.key().as_ref()], 
         bump
     )]
@@ -192,9 +216,9 @@ pub struct ProjectAccount {
     pub client_name: String,
     pub description: String,
     pub budget: u64,
-    pub state: u8,               // Change to u8
-    pub freelancer_name: String, // Add freelancer_name field
-    pub agreed_price: Option<u64>, // Add a field to store the agreed-upon price
+    pub state: u8,               
+    pub freelancer_name: String, 
+    pub agreed_price: Option<u64>, 
 }
 
 #[account]
@@ -207,10 +231,10 @@ pub struct ClientAccount {
 #[derive(Default)]
 pub struct FreelancerAccount {
     pub freelancer_name: String,
-    pub rating: u8, // Add a field to store freelancer rating (optional)
+    pub rating: u8,
 }
 
-#[repr(u8)] // Represent the enum as u8 in the Solana account
+#[repr(u8)]
 #[derive(Debug, PartialEq)]
 pub enum ProjectState {
     Open = 0,
