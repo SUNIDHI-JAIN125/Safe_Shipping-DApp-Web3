@@ -113,27 +113,27 @@ it("Assign Project to Freelancer", async () => {
   });
   
 
- it("Complete Project", async () => {
-    await program.methods.completeProject(new anchor.BN(idp),new anchor.BN(agreed_price))
-      .accounts({
-        projectAccount: project_account,
-        clientWallet: "4zEnZbavKFosf6TJ9ty8pTdyzQKxTnPXVEGB9K6jiAxt", // Provide client wallet public key
-        freelancerWallet: "HmSihopc4qE2BL3F4CCxUV583RXkNhwffDskBPXvvoDK", // Provide freelancer wallet public key
-        tokenProgram: TOKEN_PROGRAM_ID, // Provide token program ID
-        authority: program.provider.publicKey,
-      })
-      .rpc();
-  });
-
-
-// it("Close Project", async () => { 
-//     await program.methods
-//       .closeProject(new anchor.BN(idp))
+//  it("Complete Project", async () => {
+//     await program.methods.completeProject(new anchor.BN(idp),new anchor.BN(agreed_price))
 //       .accounts({
-//         projectAccount:project_account,
+//         projectAccount: project_account,
+//         clientWallet: "4zEnZbavKFosf6TJ9ty8pTdyzQKxTnPXVEGB9K6jiAxt", // Provide client wallet public key
+//         freelancerWallet: "HmSihopc4qE2BL3F4CCxUV583RXkNhwffDskBPXvvoDK", // Provide freelancer wallet public key
+//         tokenProgram: TOKEN_PROGRAM_ID, // Provide token program ID
 //         authority: program.provider.publicKey,
 //       })
 //       .rpc();
 //   });
+
+
+it("Close Project", async () => { 
+    await program.methods
+      .closeProject(new anchor.BN(idp))
+      .accounts({
+        projectAccount:project_account,
+        authority: program.provider.publicKey,
+      })
+      .rpc();
+  });
 
 });
