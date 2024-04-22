@@ -1,25 +1,26 @@
 import BN from "bn.js";
 import * as web3 from "@solana/web3.js";
 import * as anchor from "@coral-xyz/anchor";
-import { SafeShipping } from "../target/types/safe_shipping";
+import type { SafeShipping } from "../target/types/safe_shipping";
 
  describe("SAFE SHIPPING", async () => {
   // Configure the client to use the local cluster
-  anchor.setProvider(anchor.AnchorProvider.env());  
+  anchor.setProvider(anchor.AnchorProvider.env());
 
   const program = anchor.workspace.SafeShipping as anchor.Program<SafeShipping>;
   
   let descriptionProject = "project";
   let budget = 10;
-  let agreed_price = 12;
+  let agreed_price = 19;
+   
   // let client_wallet="TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
   // let freelancer_wallet= "Gdp2qPCjeiJXN4rAtXa9e1Mdga7iqYcNHHy935iiaBs3";
-
-//  let token_program_id = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
+ let TOKEN_PROGRAM_ID = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+//  let token_program_id = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"; 
 
   // Generate random IDs for testing
-  let idc = 10;
-  let idf =11;
+  let idc = 11;
+  let idf = 10;
   let idp = 12;
   
 
@@ -36,8 +37,8 @@ import { SafeShipping } from "../target/types/safe_shipping";
   let idpBytes = new anchor.BN(idpNumber).toArrayLike(Buffer, "le", 8);
 
 
-  let freelancer_name = "worker free";
-  let client_name = "boss client";
+  let freelancer_name = "worker";
+  let client_name = "boss";
 
   let [client_account] = anchor.web3.PublicKey.findProgramAddressSync(
     [
@@ -65,6 +66,8 @@ import { SafeShipping } from "../target/types/safe_shipping";
     ],
     program.programId
   );
+
+
 
   it("Initialize Client", async () => {
     await program.methods
@@ -101,32 +104,29 @@ import { SafeShipping } from "../target/types/safe_shipping";
 
 it("Assign Project to Freelancer", async () => {
     await program.methods
-    .assignProject(freelancer_name, new anchor.BN(agreed_price), new anchor.BN(idp))
+    .assignProject(new anchor.BN(idp),freelancer_name,new anchor.BN(agreed_price))
+    .accounts({
+        projectAccount: project_account,
+        authority: program.provider.publicKey,
+      })
+    .rpc();
+  });
+  
+
+ it("Complete Project", async () => {
+    await program.methods.completeProject(new anchor.BN(idp),new anchor.BN(agreed_price))
       .accounts({
         projectAccount: project_account,
+        clientWallet: "4zEnZbavKFosf6TJ9ty8pTdyzQKxTnPXVEGB9K6jiAxt", // Provide client wallet public key
+        freelancerWallet: "HmSihopc4qE2BL3F4CCxUV583RXkNhwffDskBPXvvoDK", // Provide freelancer wallet public key
+        tokenProgram: TOKEN_PROGRAM_ID, // Provide token program ID
         authority: program.provider.publicKey,
       })
       .rpc();
   });
-  
 
 
-//  it("Complete Project", async () => {
-// await program.methods.completeProject(new anchor.BN(1), new anchor.BN(idp))
-//       .accounts({
-//         projectAccount: project_account,
-//         clientAccount: client_account,
-//         freelancerAccount: freelancer_account,
-//         clientWallet: client_wallet,
-//         freelancerWallet: freelancer_wallet,
-//         tokenProgram: token_program_id,
-//         authority: program.provider.publicKey,
-//       })
-//       .rpc();
-//   });
-
-
-// it("Close Project", async () => {
+// it("Close Project", async () => { 
 //     await program.methods
 //       .closeProject(new anchor.BN(idp))
 //       .accounts({
