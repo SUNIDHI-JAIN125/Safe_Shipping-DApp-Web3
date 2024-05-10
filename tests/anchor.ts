@@ -9,19 +9,15 @@ import type { SafeShipping } from "../target/types/safe_shipping";
 
   const program = anchor.workspace.SafeShipping as anchor.Program<SafeShipping>;
   
-  let descriptionProject = "project";
-  let budget = 10;
+  let descriptionProject = "Make a Wordpress Website for a Shoe Shop";
+  let budget = 4;
   let agreed_price = 19;
-   
-  // let client_wallet="TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
-  // let freelancer_wallet= "Gdp2qPCjeiJXN4rAtXa9e1Mdga7iqYcNHHy935iiaBs3";
- let TOKEN_PROGRAM_ID = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-//  let token_program_id = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"; 
+  
 
   // Generate random IDs for testing
-  let idc = 11;
-  let idf = 10;
-  let idp = 12;
+  let idc = 200;
+  let idf = 100;
+  let idp = 1715359553011;
   
 
   let idcU64 = new anchor.BN(idc);
@@ -38,16 +34,17 @@ import type { SafeShipping } from "../target/types/safe_shipping";
 
 
   let freelancer_name = "worker";
-  let client_name = "boss";
+  let client_name = "Test Client";
+  let freelancer_pubkey_str= "GFBKUU6Q42f6KJw7Tnh2LU25bpKmNH2fivwENuGZHh4E";
 
-  let [client_account] = anchor.web3.PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("project"),
-      program.provider.publicKey.toBuffer(),
-      idcBytes,
-    ],
-    program.programId
-  );
+  // let [client_account] = anchor.web3.PublicKey.findProgramAddressSync(
+  //   [
+  //     Buffer.from("project"),
+  //     program.provider.publicKey.toBuffer(),
+  //     idcBytes,
+  //   ],
+  //   program.programId
+  // );
 
   let [project_account] = anchor.web3.PublicKey.findProgramAddressSync(
     [
@@ -69,15 +66,15 @@ import type { SafeShipping } from "../target/types/safe_shipping";
 
 
 
-  it("Initialize Client", async () => {
-    await program.methods
-      .registerClient(new anchor.BN(idc), client_name)
-      .accounts({
-        clientAccount: client_account,
-        authority: program.provider.publicKey,
-      })
-      .rpc();
-  });
+  // it("Initialize Client", async () => {
+  //   await program.methods
+  //     .registerClient(new anchor.BN(idc), client_name)
+  //     .accounts({
+  //       clientAccount: client_account,
+  //       authority: program.provider.publicKey,
+  //     })
+  //     .rpc();
+  // });
 
   it("Initialize Freelancer", async () => {
     await program.methods
@@ -91,10 +88,9 @@ import type { SafeShipping } from "../target/types/safe_shipping";
 
   it("Initialize Project", async () => {
     await program.methods
-      .createProject(new anchor.BN(idp), descriptionProject, new anchor.BN(budget))
+      .createProject(new anchor.BN(idp),client_name,descriptionProject,new anchor.BN(budget))
       .accounts({
         projectAccount: project_account,
-        clientAccount: client_account,
         authority: program.provider.publicKey,
       })
       .rpc();
@@ -104,8 +100,8 @@ import type { SafeShipping } from "../target/types/safe_shipping";
 
 it("Assign Project to Freelancer", async () => {
     await program.methods
-    .assignProject(new anchor.BN(idp),freelancer_name,new anchor.BN(agreed_price))
-    .accounts({
+    .assignProject(new anchor.BN(idp),freelancer_pubkey_str,new anchor.BN(agreed_price))
+    .accounts({ 
         projectAccount: project_account,
         authority: program.provider.publicKey,
       })
@@ -113,17 +109,16 @@ it("Assign Project to Freelancer", async () => {
   });
   
 
-//  it("Complete Project", async () => {
-//     await program.methods.completeProject(new anchor.BN(idp),new anchor.BN(agreed_price))
-//       .accounts({
-//         projectAccount: project_account,
-//         clientWallet: "4zEnZbavKFosf6TJ9ty8pTdyzQKxTnPXVEGB9K6jiAxt", // Provide client wallet public key
-//         freelancerWallet: "HmSihopc4qE2BL3F4CCxUV583RXkNhwffDskBPXvvoDK", // Provide freelancer wallet public key
-//         tokenProgram: TOKEN_PROGRAM_ID, // Provide token program ID
-//         authority: program.provider.publicKey,
-//       })
-//       .rpc();
-//   });
+ it("Complete Project", async () => {
+    await program.methods.completeProject(new anchor.BN(idp))
+      .accounts({
+        projectAccount: project_account,
+        authority: program.provider.publicKey,
+      })
+      .rpc();
+  });
+
+
 
 
 it("Close Project", async () => { 

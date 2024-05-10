@@ -10,7 +10,7 @@ name = "safe_shipping"
 
 [features]
 no-entrypoint = []
-no-idl = []
+no-idl = [] 
 no-log-ix-name = []
 cpi = ["no-entrypoint"]
 default = []
