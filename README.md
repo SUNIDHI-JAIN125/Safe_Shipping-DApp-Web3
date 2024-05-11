@@ -9,10 +9,13 @@ To launch the frontend, follow these steps:
 
 Navigate to the client-side directory:
 cd client-side
+
 Install dependencies:
 yarn install
+
 Start the development server:
 yarn dev
+
 The application will be running at http://localhost:3000.
 
 Connect your Solana Wallet with DEVNET network.
