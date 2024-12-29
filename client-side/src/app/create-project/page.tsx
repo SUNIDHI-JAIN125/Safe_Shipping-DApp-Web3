@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { Project } from '../types/project';
 import { useToast } from "@chakra-ui/react";
 import { createProject } from "../util/program/createProject";
-  import { getClientProjects } from '../util/program/getclientprojects';
+import { getClientProjects } from '../util/program/getclientprojects';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet';
 import AssignProjectButton from './AssignProjectButton';
-import {CompleteProjectButton} from './CompleteProjectButton';
+import { CompleteProjectButton } from './CompleteProjectButton';
 
 const Page = () => {
   const [clientProjects, setClientProjects] = useState<Project[]>([]);
@@ -80,59 +80,54 @@ const Page = () => {
   };
 
   return (
-    <main className='bg-black min-h-screen'>
-      <h1 className='text-green-300 text-4xl p-10 justify-start'>Created Projects - </h1>
+    <main className='bg-black min-h-screen '>
+      <h1 className='text-green-300 text-4xl p-10 mb-10 justify-start'>Created Projects - </h1>
       {clientProjects.length === 0 ? (
-                <div className="flex items-center justify-center h-full">
-                    <p className="text-white text-2xl">Nothing to show here...</p>
+        <div className="flex items-center justify-center h-full">
+          <p className="text-white text-2xl">Nothing to show here...</p>
+        </div>
+      ) : (
+        <div className='grid grid-cols-1 sm:grid-cols-2 gap-5 w-[70%] m-auto'>
+          {clientProjects.map((project: Project) => (
+            <div key={project.pubKey} className="bg-gray-800 rounded-md p-6 m-4 shadow-lg flex flex-col">
+              <h2 className="text-lg font-semibold text-white">{project.client_name}</h2>
+              <p className='text-white pl-1 mt-4'>Project Description -</p>
+              <p className="text-green-300 mt-1 pl-1 tracking-wide whitespace-wrap">{project.description}</p>
+              <p className="text-gray-300 mt-3 pl-1">Budget: <span className='text-green-300 pl-2'>{project.budget} SOL</span></p>
+              <div className="flex justify-between mt-3">
+                <p className="text-gray-300 mt-2 pl-1">State:</p>
+                <span className={`text-green-300 mt-2 ${project.state === 2 ? 'text-yellow-400' : ''} ${project.state === 1 ? 'text-red-500' : ''} `}>
+                  {project.state === 0 ? 'Open' : project.state === 1 ? 'Closed' : 'In Progress'}
+                </span>
+              </div>
+
+              {(project.state === 1 || project.state === 2) && (
+                <>
+                  <p className="text-gray-300 mt-3 pl-1">
+                    Freelancer Pubkey: {' '}
+                    <span className="text-green-300  text-[0.80rem]">
+                      {project.freelancer_pubkey}
+                    </span>
+                  </p>
+                  <p className="text-gray-300 mt-3 pl-1">Agreed Price: <span className='text-green-300 pl-2'>{project.agreedPrice} SOL</span></p>
+                </>
+              )}
+
+              {project.state === 0 && (
+                <div className='flex justify-end mt-10'>
+                  <AssignProjectButton setClientProjects={setClientProjects} projectId={project.id} />
                 </div>
-            ) : (
-      <div className='flex flex-wrap p-3 w-[70%] gap-5 m-auto justify-between'>
-        {clientProjects.map((project: Project) => (
-          <div key={project.pubKey} className="bg-gray-800 rounded-md p-4 m-4 flex-grow w-80 h-82">
-            <h2 className="text-lg font-semibold text-white">{project.client_name}</h2>
-            <p className='text-white pl-1 mt-4'>Project Description -</p>
-            <p className="text-green-300 mt-1 pl-1 tracking-wide whitespace-wrap">{project.description}</p>
-            <p className="text-gray-300 mt-3 pl-1">Budget: <span className='text-green-300 pl-2'>{project.budget} SOL</span></p>
-            <div className="flex justify-between mt-3">
-              <p className="text-gray-300 mt-2 pl-1">State:</p>
-              <span className={`text-green-300 mt-2 ${project.state === 2 ? 'text-yellow-400' : ''} ${project.state === 1 ? 'text-red-500' : ''} `}>
-                {project.state === 0 ? 'Open' : project.state === 1 ? 'Closed' : 'In Progress'}
-              </span>
+              )}
+
+              {project.state === 2 && (
+                <div className='flex justify-end'>
+                  <CompleteProjectButton setClientProjects={setClientProjects} projectId={project.id} freelancerPubkey={project.pubKey} agreedPrice={project.agreedPrice} />
+                </div>
+              )}
             </div>
-
-          
-            {(project.state === 1 || project.state === 2) && (
-              <>
-                <p className="text-gray-300 mt-3 pl-1">
-                  Freelancer Pubkey: {' '}
-                  <span className="text-green-300  text-[0.80rem]">
-                    {project.freelancer_pubkey}
-                  </span>
-                </p>
-                <p className="text-gray-300 mt-3 pl-1">Agreed Price: <span className='text-green-300 pl-2'>{project.agreedPrice} SOL</span></p>
-                 
-            
-              </>
-            )}
-
-             {project.state === 0 && (
-                  <div className='flex justify-end mt-10'>
-              <AssignProjectButton  setClientProjects={setClientProjects}  projectId={project.id} />
-              </div>
-             )}
-
-             {project.state === 2 && (
-              <div className='flex justify-end'>  
-              <CompleteProjectButton  setClientProjects={setClientProjects} projectId={project.id} freelancerPubkey={project.pubKey} agreedPrice={project.agreedPrice} />
-              </div>
-             
-            )}
-           
-          </div>
-        ))}
-      </div>
-            )}
+          ))}
+        </div>
+      )}
       <div className='flex items-center mt-4'>
         <button
           onClick={handleCreateProjectClick}
@@ -141,10 +136,8 @@ const Page = () => {
           Add New Project +
         </button>
       </div>
-    
 
-
-      {/*  Modal Code here... */}
+      {/* Modal Code here... */}
       {showModal && (
         <div className='fixed z-10 inset-0 overflow-y-auto'>
           <div className='flex items-center justify-center min-h-screen p-4 text-center'>
@@ -170,7 +163,7 @@ const Page = () => {
                   </div>
                   <div className='mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left'>
                     <h3 className='text-xl leading-6 font-semibold text-gray-900' id='modal-title'>
-                       New Project
+                      New Project
                     </h3>
 
                     <form onSubmit={handleSubmit}>
@@ -221,17 +214,12 @@ const Page = () => {
                           />
                         </div>
                       </div>
-                      <div className=' px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse mt-4'>
+
+                      <div className='flex justify-end mt-4'>
                         <button
                           type='submit'
-                          className='w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-md font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto'>
-                          Initialize Project
-                        </button>
-                        <button
-                          type='button'
-                          onClick={handleCloseModal}
-                          className='w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-red-500 text-md font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto '>
-                          Close
+                          className='inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500'>
+                          Create Project
                         </button>
                       </div>
                     </form>
