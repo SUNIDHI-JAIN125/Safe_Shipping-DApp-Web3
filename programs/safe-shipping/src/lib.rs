@@ -29,7 +29,7 @@ pub mod safe_shipping {
     // }
 
 
-// Function to create a project
+
     pub fn create_project(
     ctx: Context<CreateProject>,
     id: u64,
@@ -68,7 +68,7 @@ pub mod safe_shipping {
     }
 
 
-   // Function to assign a project to a freelancer
+  
     pub fn assign_project(
     ctx: Context<AssignProject>,
     _id: u64,
@@ -77,12 +77,12 @@ pub mod safe_shipping {
 ) -> Result<()> {
     let project_account = &mut ctx.accounts.project_account;
 
-    // Ensure the caller is the owner of the project account
+
     if ctx.accounts.authority.key != &project_account.authority {
         return Err(ErrorCode::Unauthorized.into());
     }
 
-    // Ensure project is open
+   
     if project_account.state != ProjectState::Open as u8 {
         return Err(ErrorCode::ProjectNotOpen.into());
     }
@@ -90,7 +90,6 @@ pub mod safe_shipping {
     let freelancer_pubkey = Pubkey::from_str(&freelancer_pubkey_str)
         .map_err(|_| ErrorCode::InvalidFreelancer)?;
 
-    // Assign project to the freelancer
     project_account.freelancer_pubkey = freelancer_pubkey;
     project_account.agreed_price = agreed_price;
     project_account.state = ProjectState::InProgress as u8;
@@ -100,22 +99,22 @@ pub mod safe_shipping {
 
 
 
-// Function to mark project as completed
+
     pub fn complete_project(ctx: Context<CompleteProject>, _id: u64) -> Result<()> {
     let project_account = &mut ctx.accounts.project_account;
 
-    // Ensure project is in progress
+   
     if project_account.state != ProjectState::InProgress as u8 {
         return Err(ErrorCode::ProjectNotOpen.into());
     }
-    // Close the project
+  
     project_account.state = ProjectState::Closed as u8;
 
     Ok(())
 }
 
 
-    // Function to close a project
+   
     pub fn close_project(ctx: Context<CloseProject>, _id: u64) -> Result<()> {
         let project_account = &mut ctx.accounts.project_account;
         project_account.state = ProjectState::Closed as u8; 

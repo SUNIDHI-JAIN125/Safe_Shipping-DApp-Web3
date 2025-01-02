@@ -75,41 +75,43 @@ const Page = () => {
     setDescription('');
     setBudget(0);
 
-    // Close modal
+   
     setShowModal(false);
   };
 
   return (
-    <main className='bg-black min-h-screen '>
+
+    
+    <main className='bg-black min-h-screen'>
       <h1 className='text-green-300 text-4xl p-10 mb-10 justify-start'>Created Projects - </h1>
       {clientProjects.length === 0 ? (
         <div className="flex items-center justify-center h-full">
           <p className="text-white text-2xl">Nothing to show here...</p>
         </div>
       ) : (
-        <div className='grid grid-cols-1 sm:grid-cols-2 gap-5 w-[70%] m-auto'>
+        <div className='grid grid-cols-1 xl:grid-cols-2 gap-5 w-[70%] m-auto'>
           {clientProjects.map((project: Project) => (
             <div key={project.pubKey} className="bg-gray-800 rounded-md p-6 m-4 shadow-lg flex flex-col">
-              <h2 className="text-lg font-semibold text-white">{project.client_name}</h2>
-              <p className='text-white pl-1 mt-4'>Project Description -</p>
-              <p className="text-green-300 mt-1 pl-1 tracking-wide whitespace-wrap">{project.description}</p>
-              <p className="text-gray-300 mt-3 pl-1">Budget: <span className='text-green-300 pl-2'>{project.budget} SOL</span></p>
+              <h2 className="text-xl font-semibold text-white">{project.client_name}</h2>
+              <p className='text-white xl:text-lg pl-1 mt-4'>Project Description -</p>
+              <p className="text-green-300 mt-1 pl-1 xl:text-lg tracking-wide whitespace-wrap">{project.description}</p>
+              <p className="text-gray-300 mt-3 xl:text-lg pl-1">Budget: <span className='text-green-300 xl:text-lg pl-2'>{project.budget} SOL</span></p>
               <div className="flex justify-between mt-3">
-                <p className="text-gray-300 mt-2 pl-1">State:</p>
-                <span className={`text-green-300 mt-2 ${project.state === 2 ? 'text-yellow-400' : ''} ${project.state === 1 ? 'text-red-500' : ''} `}>
+                <p className="text-gray-300 mt-2 xl:text-lg pl-1">State:</p>
+                <span className={`text-green-300 xl:text-lg mt-2 ${project.state === 2 ? 'text-yellow-400' : ''} ${project.state === 1 ? 'text-red-500' : ''} `}>
                   {project.state === 0 ? 'Open' : project.state === 1 ? 'Closed' : 'In Progress'}
                 </span>
               </div>
 
               {(project.state === 1 || project.state === 2) && (
                 <>
-                  <p className="text-gray-300 mt-3 pl-1">
+                  <p className="text-gray-300 mt-3 xl:text-lg pl-1">
                     Freelancer Pubkey: {' '}
-                    <span className="text-green-300  text-[0.80rem]">
+                    <span className="text-green-300 text-[0.75rem] xl:text-sm">
                       {project.freelancer_pubkey}
                     </span>
                   </p>
-                  <p className="text-gray-300 mt-3 pl-1">Agreed Price: <span className='text-green-300 pl-2'>{project.agreedPrice} SOL</span></p>
+                  <p className="text-gray-300 xl:text-lg mt-3 pl-1">Agreed Price: <span className='text-green-300 pl-2 xl:text-lg'>{project.agreedPrice} SOL</span></p>
                 </>
               )}
 
@@ -128,7 +130,7 @@ const Page = () => {
           ))}
         </div>
       )}
-      <div className='flex items-center mt-4'>
+      <div className='flex items-center mt-4 pb-7'>
         <button
           onClick={handleCreateProjectClick}
           type='submit'
@@ -168,7 +170,7 @@ const Page = () => {
 
                     <form onSubmit={handleSubmit}>
                       <div className='mt-4'>
-                        <label htmlFor='client' className='text-lg font-medium p-2 text-gray-700'>
+                        <label htmlFor='client' className='text-lg font-medium  text-gray-700'>
                           Client Name
                         </label>
                         <input
@@ -184,7 +186,7 @@ const Page = () => {
                       </div>
                       <div className='mt-4'>
                         <div className='mt-2'>
-                          <label htmlFor='description' className='text-lg font-medium p-2 text-gray-700'>
+                          <label htmlFor='description' className='text-lg font-medium  text-gray-700'>
                             Project Description
                           </label>
                           <input
@@ -199,7 +201,7 @@ const Page = () => {
                           />
                         </div>
                         <div className='mt-4'>
-                          <label htmlFor='budget' className='text-lg font-medium p-2 text-gray-700'>
+                          <label htmlFor='budget' className='text-lg font-medium  text-gray-700'>
                             Budget
                           </label>
                           <input
@@ -218,7 +220,7 @@ const Page = () => {
                       <div className='flex justify-end mt-4'>
                         <button
                           type='submit'
-                          className='inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500'>
+                          className='inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-md font-medium rounded-md text-white bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400'>
                           Create Project
                         </button>
                       </div>
@@ -232,6 +234,7 @@ const Page = () => {
         </div>
       )}
     </main>
+ 
   );
 };
 

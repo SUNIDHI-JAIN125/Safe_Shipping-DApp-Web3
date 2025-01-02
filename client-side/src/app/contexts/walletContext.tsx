@@ -18,10 +18,7 @@ export default function Wallet({
     const network = WalletAdapterNetwork.Devnet;
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
     const wallets = useMemo(
-      () => [
-        // manually add any legacy wallet adapters here
-        // new UnsafeBurnerWalletAdapter(),
-      ],
+      () => [],
       [network],
     );
    

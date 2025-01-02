@@ -5,8 +5,8 @@ import { FaGithub, FaHandsHelping, FaBriefcase, FaShieldAlt } from "react-icons/
 export default function Home() {
   return (
     <>
-      <div className="bg-cover bg-center bg-black h-screen relative flex gap-y-2 flex-col items-center justify-center">
-        {/* GitHub link in the top-right corner */}
+      <div className="bg-cover bg-center bg-black h-[90vh] relative flex gap-y-2 flex-col items-center justify-center">
+      
         <div className="absolute top-5 right-16 flex items-center gap-2 text-gray-300">
           <FaGithub size={20} />
           <Link
@@ -18,7 +18,7 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* Main Header Section */}
+       
         <div className="z-10 text-4xl xl:text-6xl text-center text-white font-bold font-sans">
           <p className="text-4xl xl:text-7xl tracking-tight word-spacing-2">
             Decentralized Freelancing App
@@ -49,32 +49,38 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Cards Section */}
+    
       <div className="bg-black py-16">
-        <div className="container mx-auto px-5 mb-10 flex flex-col lg:flex-row gap-10 justify-center items-center">
-          {/* Card 1 */}
-          <div className="bg-transparent border  border-green-50 shadow-lg rounded-lg p-6 text-center w-full lg:w-1/3">
-            <FaHandsHelping size={50} className="text-green-400 mx-auto mb-4 rounded-full p-2 bg-green-900" />
-            <h3 className="text-xl font-bold mb-2">Collaborate Effortlessly</h3>
-            <p className="text-gray-600">
+        <div className="container mx-auto px-5 mb-10 flex flex-col lg:flex-row gap-10 justify-start items-start">
+       
+          <div className="bg-transparent border  border-green-900 shadow-lg rounded-lg p-6 xl:p-10 items-start justify-start text-start w-full lg:w-1/3 hover:border-green-700">
+          <div className="flex items-start mb-4">
+        <FaHandsHelping size={50} className="text-green-400 rounded-lg p-2 bg-green-900" />
+      </div>
+            <h3 className="text-xl text-gray-200 font-bold mb-2 mt-6">Collaborate Effortlessly</h3>
+            <p className="text-green-100  mt-4 tracking-wide text-lg">
               Build meaningful connections with clients and freelancers on a decentralized platform.
             </p>
           </div>
 
-          {/* Card 2 */}
-          <div className="bg-white shadow-lg rounded-lg p-6 text-center w-full lg:w-1/3">
-            <FaBriefcase size={50} className="text-blue-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold mb-2">Streamlined Workflow</h3>
-            <p className="text-gray-600">
+         
+          <div className="bg-transparent border  border-green-900 shadow-lg rounded-lg p-6 xl:p-10 items-start justify-start text-start w-full lg:w-1/3 hover:border-green-700">
+          <div className="flex items-start mb-4">
+            <FaBriefcase size={50} className="text-green-400 p-2 rounded-lg bg-green-900" />
+            </div>
+            <h3 className="text-xl text-gray-200 font-bold mb-2 mt-6">Streamlined Workflow</h3>
+            <p className="text-green-100  mt-4 tracking-wide text-lg">
               Manage projects and transactions securely without third-party interference.
             </p>
           </div>
 
-          {/* Card 3 */}
-          <div className="bg-white shadow-lg rounded-lg p-6 text-center w-full lg:w-1/3">
-            <FaShieldAlt size={50} className="text-red-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold mb-2">Enhanced Security</h3>
-            <p className="text-gray-600">
+       
+          <div className="bg-transparent border  border-green-900 shadow-lg rounded-lg p-6 xl:p-10 items-start justify-start text-start w-full lg:w-1/3 hover:border-green-700">
+          <div className="flex items-start mb-4">
+            <FaShieldAlt size={50} className="text-green-400 p-2 rounded-lg bg-green-900" />
+            </div>
+            <h3 className="text-xl text-gray-200 font-bold mb-2 mt-6">Enhanced Security</h3>
+            <p className="text-green-100  mt-4 tracking-wide text-lg">
               Protect your data and payments with blockchain-powered transparency.
             </p>
           </div>

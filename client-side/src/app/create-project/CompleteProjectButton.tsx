@@ -5,23 +5,13 @@ import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet"
 import {useAnchorWallet } from "@solana/wallet-adapter-react" 
 import { getClientProjects } from '../util/program/getclientprojects';  
 
-// import {
-//   LAMPORTS_PER_SOL,
-//   SystemProgram,
-//   Transaction,
-//   sendAndConfirmTransaction,
-//   Keypair,
-//   PublicKey,
-//   Connection
-// } from "@solana/web3.js";
-// import { web3 } from '@project-serum/anchor';
 
 
 export const CompleteProjectButton = ({setClientProjects,projectId,freelancerPubkey, agreedPrice}:{setClientProjects:any,projectId:number,freelancerPubkey:string,agreedPrice:number}) => {
 
   const toast = useToast(); 
   const wallet = useAnchorWallet();
-  // const connection = new Connection(web3.clusterApiUrl("devnet"),'confirmed' );
+ 
 
   const handleCompleteSubmit = async () => {
     
@@ -32,40 +22,6 @@ export const CompleteProjectButton = ({setClientProjects,projectId,freelancerPub
       })
       return
     }
-
-
-    // const secretKey=  Uint8Array.from([])
-    
-    // const signer = Keypair.fromSecretKey(secretKey);
-    // const publicKey =  new PublicKey(freelancerPubkey);
-   
-
-
-
-  
-    // const transferInstruction = SystemProgram.transfer({
-    //   fromPubkey: wallet.publicKey,
-    //   toPubkey: publicKey,
-    //   lamports: agreedPrice * LAMPORTS_PER_SOL, // Convert transferAmount to lamports
-    // });
-
-
-
-
-    // Add the transfer instruction to a new transaction
-// const transaction = new Transaction().add(transferInstruction);
-
-// Send the transaction to the network
-// const transactionSignature = await sendAndConfirmTransaction(
-//   connection,
-//   transaction,
-//   [signer] // signer
-// );
-
-    // console.log(
-    //   "Transaction Signature:",
-    //   `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
-    // );
 
     const { sig, error } = await completeProject(
       wallet as NodeWallet,

@@ -4,7 +4,6 @@ import * as anchor from "@coral-xyz/anchor";
 import type { SafeShipping } from "../target/types/safe_shipping";
 
  describe("SAFE SHIPPING", async () => {
-  // Configure the client to use the local cluster
   anchor.setProvider(anchor.AnchorProvider.env());
 
   const program = anchor.workspace.SafeShipping as anchor.Program<SafeShipping>;
@@ -14,7 +13,7 @@ import type { SafeShipping } from "../target/types/safe_shipping";
   let agreed_price = 19;
   
 
-  // Generate random IDs for testing
+
   let idc = 200;
   let idf = 100;
   let idp = 1715359553011;
